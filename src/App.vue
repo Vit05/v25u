@@ -1,6 +1,6 @@
 <template>
   <v-app id="inspire">
-    <v-navigation-drawer
+    <v-navigation-drawer  v-if="$vuetify.breakpoint.smOnly"
             v-model="drawer"
             app
     >
@@ -29,21 +29,21 @@
             color="indigo"
             dark
     >
+      <template v-if="$vuetify.breakpoint.smOnly">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      </template>
       <v-toolbar>
         <v-toolbar-title>Title</v-toolbar-title>
 
         <div class="flex-grow-1"></div>
-
+        <template v-if="$vuetify.breakpoint.mdAndUp">
         <v-toolbar-items>
-          <v-btn text to="/">Link 1</v-btn>
-          <v-btn text to="/about">Link 2</v-btn>
-          <v-btn text>Link 3</v-btn>
-        <!--  <router-link to="/">Home</router-link> |
-          <router-link to="/about">About</router-link>-->
+          <v-btn text to="/">Home</v-btn>
+          <v-btn text to="/about">About</v-btn>
+
         </v-toolbar-items>
 
-        <template v-if="$vuetify.breakpoint.smAndUp">
+
           <v-btn icon>
             <v-icon>mdi-export-variant</v-icon>
           </v-btn>
