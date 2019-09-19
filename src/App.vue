@@ -33,7 +33,9 @@
                 <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
             </template>
             <v-toolbar>
-                <v-toolbar-title>v25u</v-toolbar-title>
+                <v-toolbar-title>
+                    <router-link to="/">v25u</router-link>
+                </v-toolbar-title>
 
                 <div class="flex-grow-1"></div>
                 <template v-if="$vuetify.breakpoint.mdAndUp">
@@ -56,12 +58,9 @@
         </v-app-bar>
 
         <v-content>
-            <v-container
-                    class="fill-height"
-                    fluid
-            >
+
                 <router-view/>
-            </v-container>
+
         </v-content>
         <v-footer
                 color="indigo"
