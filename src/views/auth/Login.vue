@@ -32,16 +32,6 @@
                                     v-model="email"
                             ></v-text-field>
 
-
-                           <!-- <v-text-field
-                                    label="Password"
-                                    name="password"
-                                    :prepend-icon="icons.lock"
-                                    type="password"
-                                    :counter="6"
-                                    :rules="passwordRules"
-                                    v-model="password"
-                            ></v-text-field>-->
                             <v-text-field
                                     :append-icon="show3 ? icons.eye : icons.eyeOff"
                                     :rules="[passwordRules.required, passwordRules.min]"
