@@ -5,20 +5,19 @@
                              app
         >
             <v-list dense>
-                <v-list-item to="/">
-                    <v-list-item-action>
-                        <v-icon>mdi-home</v-icon>
-                    </v-list-item-action>
+                <v-list-item v-for="(link, i) in links" :to="link.url" :key="i">
+
+
                     <v-list-item-content>
-                        <v-list-item-title>Home</v-list-item-title>
+                        <v-list-item-title>{{link.title}}</v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
-                <v-list-item to="/about">
-                    <v-list-item-action>
-                        <v-icon>mdi-contact-mail</v-icon>
-                    </v-list-item-action>
+                <v-list-item  v-if="isUserLoggedIn"
+                              @click="onLogout">
+
+
                     <v-list-item-content>
-                        <v-list-item-title>Contact</v-list-item-title>
+                        <v-list-item-title>Logout</v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
             </v-list>
@@ -40,26 +39,42 @@
                 <div class="flex-grow-1"></div>
                 <template v-if="$vuetify.breakpoint.mdAndUp">
                     <v-toolbar-items>
-                      <v-btn text v-for="(link, i) in links" :to="link.url" :key="i">{{link.title}}</v-btn>
+                        <v-btn text v-for="(link, i) in links" :to="link.url" :key="i">{{link.title}}</v-btn>
                     </v-toolbar-items>
 
 
-                    <v-btn icon>
-                        <v-icon>mdi-export-variant</v-icon>
+
+                    <v-btn icon
+                           v-if="isUserLoggedIn"
+                    @click="onLogout">
+                        <v-icon>mdi-logout</v-icon>
                     </v-btn>
-                    <v-btn icon>
-                        <v-icon>mdi-delete-circle</v-icon>
-                    </v-btn>
-                    <v-btn icon>
-                        <v-icon>mdi-plus-circle</v-icon>
-                    </v-btn>
+
                 </template>
             </v-toolbar>
         </v-app-bar>
+        <template v-if="error">
+            <v-snackbar
+                    :color="red"
+                    :multi-line="true"
+                    :timeout="5000"
+                    @input="closeError"
+                    :value="true"
+            >
+                {{ error }}
+                <v-btn
+                        dark
+                        text
+                        @click.native="closeError"
+                >
+                    Close
+                </v-btn>
+            </v-snackbar>
 
+        </template>
         <v-content>
 
-                <router-view/>
+            <router-view/>
 
         </v-content>
         <v-footer
@@ -75,19 +90,45 @@
 
     export default {
         name: 'App',
-        components: {
-        },
+        components: {},
         data: () => ({
             //
             drawer: false,
-            links: [
-                {title: 'Home', url: '/'},
-                {title: 'Login', url: '/login'},
-                {title: 'Register', url: '/register'},
-                {title: 'Cart', url: '/checkout'},
-                {title: 'New Product', url: '/new'},
-                {title: 'My Products', url: '/list'},
-            ]
         }),
+        computed: {
+            error() {
+                return this.$store.getters.error
+            },
+
+            isUserLoggedIn() {
+                return this.$store.getters.isUserLoggedIn
+            },
+            links() {
+                if (this.isUserLoggedIn) {
+                    return [
+                        {title: 'Home', url: '/'},
+
+                        {title: 'Cart', url: '/checkout'},
+                        {title: 'New Product', url: '/new'},
+                        {title: 'My Products', url: '/list'},
+                    ]
+                }
+                return [
+                    {title: 'Home', url: '/'},
+
+                    {title: 'Login', url: '/login'},
+                    {title: 'Register', url: '/register'},
+                ]
+            }
+        },
+        methods: {
+            closeError() {
+                this.$store.dispatch('clearError')
+            },
+            onLogout(){
+                this.$store.dispatch('logoutUser')
+                this.$router.push('/')
+            }
+        }
     };
 </script>

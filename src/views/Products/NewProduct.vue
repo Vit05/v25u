@@ -48,12 +48,6 @@
                                     :rules="[v=>!!v||'Field is required']"
                                     v-model="price"
                             ></v-text-field>
-                            <v-text-field
-
-                                    type="text"
-                                    multi-line
-                                    v-model="description"
-                            ></v-text-field>
                             <v-textarea
                                     label="Description Product"
                                     name="description"
@@ -135,9 +129,10 @@
                         price: this.price,
                         description: this.description,
                         promo: this.promo,
+                        imageSrc: 'https://image.ibb.co/fZzq1o/Lenovo_Legion_Y520.jpg'
                     }
 
-                    alert(prd)
+                    this.$store.dispatch('createProduct', prd)
                 }
             }
         }

@@ -22,7 +22,8 @@
                         <div class="flex-grow-1"></div>
                     </v-toolbar>
                     <v-card-text>
-                        <v-form ref="form">
+                        <v-form ref="form"
+                                v-model="valid">
                             <v-text-field
                                     label="Email"
                                     name="email"
@@ -47,8 +48,10 @@
                     <v-card-actions>
                         <div class="flex-grow-1"></div>
                         <v-btn color="primary"
-                               :disabled="valid"
-                               @click="onSubmit">Login</v-btn>
+                               :disabled="!valid || loading"
+                               :loading="loading"
+                               @click="onSubmit">Login
+                        </v-btn>
                     </v-card-actions>
                 </v-card>
             </v-col>
@@ -68,14 +71,14 @@
         data: () => ({
             drawer: null,
             icons: {
-                    account: mdiAccount,
-                    lock: mdiLock,
-                    eye: mdiEye,
-                    eyeOff: mdiEyeOff
-                },
+                account: mdiAccount,
+                lock: mdiLock,
+                eye: mdiEye,
+                eyeOff: mdiEyeOff
+            },
             valid: false,
             show3: false,
-            password:'',
+            password: '',
             passwordRules: {
                 required: value => !!value || 'Required.',
                 min: v => v.length >= 6 || 'Min 6 characters',
@@ -89,16 +92,26 @@
 
 
         }),
-
-        methods:{
-            onSubmit(){
-                if (this.$refs.form.validate()){
+        computed: {
+            loading() {
+                return this.$store.getters.loading
+            }
+        },
+        methods: {
+            onSubmit() {
+                if (this.$refs.form.validate()) {
                     this.valid = !this.valid;
-                    const  user_2={
+                    const user = {
                         email: this.email,
                         password: this.password
                     };
-                    // console.log(user);
+
+
+                    this.$store.dispatch('loginUser', user)
+                        .then(() => {
+                            this.$router.push('/')
+                        })
+                        .catch(() => {})
                 }
             }
         }

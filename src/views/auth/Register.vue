@@ -22,7 +22,8 @@
                         <div class="flex-grow-1"></div>
                     </v-toolbar>
                     <v-card-text>
-                        <v-form ref="form">
+                        <v-form ref="form"
+                                v-model="valid">
                             <v-text-field
                                     label="Email"
                                     name="email"
@@ -58,8 +59,10 @@
                     <v-card-actions>
                         <div class="flex-grow-1"></div>
                         <v-btn color="primary"
-                               :disabled="valid"
-                               @click="onSubmit">Login</v-btn>
+                               :disabled="!valid || loading"
+                               :loading="loading"
+                               @click="onSubmit">Login
+                        </v-btn>
                     </v-card-actions>
                 </v-card>
             </v-col>
@@ -77,52 +80,62 @@
         props: {
             source: String,
         },
-        data ()  {
-           return {
-               drawer: null,
-               icons: {
-                   account: mdiAccount,
-                   lock: mdiLock,
-                   eye: mdiEye,
-                   eyeOff: mdiEyeOff,
-                   repeat: mdiRepeat,
-               },
-               valid: false,
-               show3: false,
-               password:'',
-               passwordRules: {
-                   required: value => !!value || 'Required.',
-                   min: v => v.length >= 6 || 'Min 6 characters',
-                   emailMatch: () => ('The email and password you entered don\'t match'),
-               },
-               confirmPassword:'',
-               confirmPasswordRules: {
-                   required: value => !!value || 'Required.',
-                   min: v => v.length >= 6 || 'Min 6 characters',
-                   emailMatch: () => ('The email and password you entered don\'t match'),
-                   equel: v => v === this.password || 'Password should match'
-               },
-               email: '',
-               emailRules: [
-                   v => !!v || 'E-mail is required',
-                   v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
-               ],
-           }
+        data() {
+            return {
+                drawer: null,
+                icons: {
+                    account: mdiAccount,
+                    lock: mdiLock,
+                    eye: mdiEye,
+                    eyeOff: mdiEyeOff,
+                    repeat: mdiRepeat,
+                },
+                valid: false,
+                show3: false,
+                password: '',
+                passwordRules: {
+                    required: value => !!value || 'Required.',
+                    min: v => v.length >= 6 || 'Min 6 characters',
+                    emailMatch: () => ('The email and password you entered don\'t match'),
+                },
+                confirmPassword: '',
+                confirmPasswordRules: {
+                    required: value => !!value || 'Required.',
+                    min: v => v.length >= 6 || 'Min 6 characters',
+                    emailMatch: () => ('The email and password you entered don\'t match'),
+                    equel: v => v === this.password || 'Password should match'
+                },
+                email: '',
+                emailRules: [
+                    v => !!v || 'E-mail is required',
+                    v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+                ],
+            }
 
 
         },
-
-        methods:{
-            onSubmit(){
-                if (this.$refs.form.validate()){
+        computed: {
+            loading() {
+                return this.$store.getters.loading
+            }
+        },
+        methods: {
+            onSubmit() {
+                if (this.$refs.form.validate()) {
                     this.valid = !this.valid;
                     // console.log(this.valid);
-                    alert('valid')
-                    const  user_2={
+                    // alert('valid')
+                    const user = {
                         email: this.email,
                         password: this.password
                     };
-                    console.log(user_2);
+
+
+                    this.$store.dispatch('registerUser', user)
+                        .then(() => {
+                            this.$router.push('/')
+                        })
+                        .catch(() => {})
                 }
             }
         }
