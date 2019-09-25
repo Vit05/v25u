@@ -55,7 +55,7 @@
         </v-app-bar>
         <template v-if="error">
             <v-snackbar
-                    :color="red"
+                    color="red"
                     :multi-line="true"
                     :timeout="5000"
                     @input="closeError"

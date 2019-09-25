@@ -40,6 +40,7 @@
     export default {
        computed:{
            productsOwn(){
+               console.log(this.$store.getters.productsOwn);
                return this.$store.getters.productsOwn
            }
        }

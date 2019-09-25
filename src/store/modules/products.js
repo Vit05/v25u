@@ -1,3 +1,22 @@
+import * as fb from 'firebase/app'
+import "firebase/database";
+
+class Product {
+    constructor(title, vendor, color, material, price, description, ownerId, imageSrc = '', promo = false, id = null) {
+        this.title = title
+        this.vendor = vendor
+        this.color = color
+        this.material = material
+        this.price = price
+        this.description = description
+        this.ownerId = ownerId
+        this.imageSrc = imageSrc
+        this.promo = promo
+        this.id = id
+    }
+}
+
+
 export default {
     state: {
         products: [
@@ -7,8 +26,8 @@ export default {
                 vendor: 'Lenovo',
                 color: 'black',
                 material: 'metal/plastic',
-                description: 'Intel Core i5 7300HQ 2500 MHz/15.6"/1920x1080/8Gb/1000Gb HDD/DVD íåò/NVIDIA GeForce GTX 1050, 4096 ÌÁ/Wi-Fi/Bluetooth/Win 10 Home'
-                , price: 760,
+                description: 'Intel Core i5 7300HQ 2500 MHz/15.6"/1920x1080/8Gb/1000Gb HDD/DVD íåò/NVIDIA GeForce GTX 1050, 4096 ÌÁ/Wi-Fi/Bluetooth/Win 10 Home',
+                price: 760,
                 promo: false,
                 imageSrc: 'https://image.ibb.co/fZzq1o/Lenovo_Legion_Y520.jpg'
             },
@@ -61,7 +80,6 @@ export default {
                 imageSrc: 'https://image.ibb.co/mrOsgo/Acer_Swift_5.jpg'
             },
 
-
             {
                 id: '6',
                 title: 'Apple MacBook (MLHC2RU/A)',
@@ -76,28 +94,59 @@ export default {
         ]
     },
     mutations: {
-        createProduct(state, payload){
+        createProduct(state, payload) {
             state.products.push(payload)
-        }
+        },
     },
     actions: {
-        createProduct({commit}, payload){
-            payload.id='qwerty'
-            commit('createProduct', payload)
+        async createProduct({commit, getters}, payload) {
+
+            commit('clearError')
+            commit('setLoading', true)
+            try {
+                // console.log(getters.user.id);
+                const newProduct = new Product(
+                    payload.title,
+                    payload.vendor,
+                    payload.color,
+                    payload.material,
+                    payload.price,
+                    payload.description,
+                    getters.user.id,
+                    payload.imageSrc,
+                    payload.promo,
+                )
+
+
+                const product = await fb.database().ref('products').push(newProduct)
+
+                commit('setLoading', false);
+                commit('createProduct', {
+                    ...newProduct,
+
+                    id: product.key,
+                })
+
+            } catch (error) {
+                commit('setError', error.message)
+                commit('setLoading', false)
+                throw error
+            }
         }
+        //"kjA6Yw2ZwoatxhFVDu47pSoUkow1"
     },
-    getters:{
-        products (state){
+    getters: {
+        products(state) {
             return state.products
         },
-        productsPromo (state){
+        productsPromo(state) {
             return state.products.filter(product => product.promo)
         },
-        productsOwn(state){
+        productsOwn(state) {
             return state.products
         },
         productById(state) {
-            return productId =>{
+            return productId => {
                 return state.products.find(product => product.id === productId)
             };
         }

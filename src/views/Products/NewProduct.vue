@@ -48,12 +48,20 @@
                                     :rules="[v=>!!v||'Field is required']"
                                     v-model="price"
                             ></v-text-field>
-                            <v-textarea
+
+                            <v-text-field
+                                    label="Description Product"
+                                    name="description"
+                                    type="text"
+
+                                    v-model="description"
+                            ></v-text-field>
+                          <!--  <v-textarea
                                     label="Description Product"
                                     name="description"
                                     v-model="description"
                                     :value="description"
-                            ></v-textarea>
+                            ></v-textarea>-->
 
                             <v-btn class="warning">Upload
                                 <v-icon>{{icons.upload}}</v-icon>
@@ -77,7 +85,8 @@
                             ></v-switch>
 
                             <v-btn class="success"
-                                   :disabled="!valid"
+                                   :loading="loading"
+                                   :disabled="!valid || loading"
                                    @click="createProduct"
                             >Create product
                             </v-btn>
@@ -118,10 +127,15 @@
 
 
         }),
+        computed:{
+            loading(){
+                return this.$store.getters.loading
+            }
+        },
         methods: {
             createProduct() {
                 if (this.$refs.form.validate()) {
-                    const prd = {
+                    const product = {
                         title: this.title,
                         vendor: this.vendor,
                         color: this.color,
@@ -131,8 +145,12 @@
                         promo: this.promo,
                         imageSrc: 'https://image.ibb.co/fZzq1o/Lenovo_Legion_Y520.jpg'
                     }
-
-                    this.$store.dispatch('createProduct', prd)
+                    // console.log("PRD", prd);
+                    this.$store.dispatch('createProduct', product)
+                        .then(()=>{
+                            this.$router.push('/list')
+                        })
+                        .catch(()=>{})
                 }
             }
         }

@@ -9,7 +9,7 @@
                     <v-row no-gutters>
                         <v-col cols="4" class="py-4">
                             <v-img
-                                    :src="product.imageSrc"
+                                    src="https://image.ibb.co/fZzq1o/Lenovo_Legion_Y520.jpg"
                                     lazy-src="https://picsum.photos/id/11/10/6"
                                     aspect-ratio="2" contain
                                     max-height="300"
@@ -20,17 +20,8 @@
 
                             <v-simple-table>
                                 <template v-slot:default>
-                                    <!-- <thead>
-                                     <tr>
-                                         <th class="text-right">Name</th>
-                                         <th class="text-left">Calories</th>
-                                     </tr>
-                                     </thead>-->
+
                                     <tbody>
-                                    <!-- <tr v-for="(item, key) in product" :key="key">
-                                         <td>{{ key }}</td>
-                                         <td>{{ item }}</td>
-                                     </tr>-->
                                     <tr>
                                         <th class="text-right">Name:</th>
                                         <td>{{ product.title }}</td>
