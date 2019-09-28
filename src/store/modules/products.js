@@ -1,5 +1,6 @@
 import * as fb from 'firebase/app'
 import "firebase/database";
+import "firebase/storage";
 
 class Product {
     constructor(title, vendor, color, material, price, description, ownerId, imageSrc = '', promo = false, id = null) {
@@ -40,7 +41,7 @@ export default {
                 const products = productsVal.val()
 
                 // console.log(products);
-                Object.keys(products).forEach(key=>{
+                Object.keys(products).forEach(key => {
                     const product = products[key]
                     result.push(
                         new Product(
@@ -54,7 +55,6 @@ export default {
                             product.imageSrc,
                             product.promo,
                             key
-
                         )
                     )
                 })
@@ -71,8 +71,10 @@ export default {
 
             commit('clearError')
             commit('setLoading', true)
+
+            const image = payload.image
+            console.log(image);
             try {
-                // console.log(getters.user.id);
                 const newProduct = new Product(
                     payload.title,
                     payload.vendor,
@@ -81,18 +83,23 @@ export default {
                     payload.price,
                     payload.description,
                     getters.user.id,
-                    payload.imageSrc,
+                    '',
                     payload.promo,
                 )
 
 
                 const product = await fb.database().ref('products').push(newProduct)
+                const imageExt = image.name.slice(image.name.lastIndexOf('.'))
+                const fileData = await fb.storage().ref(`products/${product.key}.${imageExt}`).put(image)
+                const imageSrc = await fb.storage().ref().child(fileData.ref.fullPath).getDownloadURL()
 
+                await fb.database().ref('products').child(product.key).update({imageSrc})
                 commit('setLoading', false);
                 commit('createProduct', {
                     ...newProduct,
 
                     id: product.key,
+                    imageSrc
                 })
 
             } catch (error) {

@@ -62,14 +62,23 @@
                                     v-model="description"
                                     :value="description"
                             ></v-textarea>-->
-
-                            <v-btn class="warning">Upload
+                            <input
+                                    style="display: none"
+                                    accept="image/*"
+                                    type="file"
+                                    name="file"
+                                    ref="fileInput"
+                                    @change="onFileChange"
+                            />
+                            <v-btn class="warning" @click="upload">Upload
                                 <v-icon>{{icons.upload}}</v-icon>
                             </v-btn>
 
+
                             <v-row align="center" justify="center">
                                 <v-img
-                                        src="https://picsum.photos/id/11/500/300"
+                                        v-if="imageSrc"
+                                        :src="imageSrc"
                                         lazy-src="https://picsum.photos/id/11/10/6"
                                         aspect-ratio="1"
                                         class="grey lighten-2"
@@ -86,7 +95,7 @@
 
                             <v-btn class="success"
                                    :loading="loading"
-                                   :disabled="!valid || loading"
+                                   :disabled="!valid || !image || loading"
                                    @click="createProduct"
                             >Create product
                             </v-btn>
@@ -124,6 +133,8 @@
             description: '',
             promo: false,
             valid: false,
+            image: null,
+            imageSrc: '',
 
 
         }),
@@ -134,7 +145,7 @@
         },
         methods: {
             createProduct() {
-                if (this.$refs.form.validate()) {
+                if (this.$refs.form.validate() && this.image) {
                     const product = {
                         title: this.title,
                         vendor: this.vendor,
@@ -143,7 +154,7 @@
                         price: this.price,
                         description: this.description,
                         promo: this.promo,
-                        imageSrc: 'https://image.ibb.co/fZzq1o/Lenovo_Legion_Y520.jpg'
+                        image: this.image
                     }
                     // console.log("PRD", prd);
                     this.$store.dispatch('createProduct', product)
@@ -152,6 +163,20 @@
                         })
                         .catch(()=>{})
                 }
+            },
+            upload(){
+                this.$refs.fileInput.click()
+            },
+            onFileChange(event) {
+                const file = event.target.files[0];
+                // console.log(file)
+                const reader = new FileReader()
+
+                reader.onload = e => {
+                    this.imageSrc = reader.result
+                }
+                reader.readAsDataURL(file)
+                this.image = file
             }
         }
     }
