@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="!loading">
         <v-container class="lighten-10" fluid>
             <v-row>
                 <v-carousel :show-arrows="true">
@@ -55,20 +55,38 @@
             </v-row>
         </v-container>
     </div>
+    <div v-else>
+        <v-overlay>
+            <v-progress-circular
+                    :width="5"
+                    :size="50"
+                    color="red"
+                    indeterminate
+            ></v-progress-circular>
+        </v-overlay>
+    </div>
 
 </template>
 
 <script>
 
     export default {
-       computed:{
-           productsPromo(){
-               return this.$store.getters.productsPromo
-           },
-           products(){
-               return this.$store.getters.products
-           }
-       },
+        data() {
+            return {
+                overlay: false,
+            }
+        },
+        computed: {
+            productsPromo() {
+                return this.$store.getters.productsPromo
+            },
+            products() {
+                return this.$store.getters.products
+            },
+            loading() {
+                return this.$store.getters.loading
+            }
+        },
         components: {},
     };
 </script>
