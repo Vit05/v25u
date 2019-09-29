@@ -27,8 +27,18 @@ export default {
             state.products = payload;
         },
         createProduct(state, payload) {
+            console.log(payload)
             state.products.push(payload)
         },
+        updateProduct(state, {title, price, description, id}) {
+            const product = state.products.find(a => {
+                return a.id === id
+            })
+
+            product.title = title
+            product.price = price
+            product.description = description
+        }
     },
     actions: {
 
@@ -73,7 +83,7 @@ export default {
             commit('setLoading', true)
 
             const image = payload.image
-            console.log(image);
+            // console.log(image);
             try {
                 const newProduct = new Product(
                     payload.title,
@@ -107,6 +117,33 @@ export default {
                 commit('setLoading', false)
                 throw error
             }
+        },
+
+        async updateProduct({commit}, {title, price, description, id}) {
+            commit('clearError')
+            commit('setLoading', true)
+            try {
+                await fb.database().ref('products').child(id).update({
+                    title,
+                    price,
+                    description
+                })
+                commit('updateProduct', {
+
+                    title,
+                    price,
+                    description,
+                    id
+
+                })
+                commit('setLoading', false)
+
+            } catch (error) {
+                alert(1)
+                commit('setError', error.message)
+                commit('setLoading', false)
+                throw error
+            }
         }
     },
     getters: {
@@ -116,8 +153,10 @@ export default {
         productsPromo(state) {
             return state.products.filter(product => product.promo)
         },
-        productsOwn(state) {
-            return state.products
+        productsOwn(state, getters) {
+            return state.products.filter(product=>{
+                return product.ownerId === getters.user.id
+            })
         },
         productById(state) {
             return productId => {

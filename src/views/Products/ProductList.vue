@@ -1,7 +1,7 @@
 <template>
     <v-container class="lighten-10">
         <v-row no-gutters>
-            <v-col cols="8" offset="2">
+            <v-col cols="8" offset="2" v-if="!loading && productsOwn.length !== 0">
                 <v-card
                         max-width="768"
                         class="mx-auto mb-4"
@@ -31,6 +31,19 @@
                     </v-row>
                 </v-card>
             </v-col>
+            <v-col cols="8" offset="2" v-else-if="!loading && productsOwn.length === 0">
+                <h1>You haven't products yet!</h1>
+            </v-col>
+            <v-col cols="8" offset="2" v-else>
+                <v-overlay>
+                    <v-progress-circular
+                            :width="5"
+                            :size="50"
+                            color="red"
+                            indeterminate
+                    ></v-progress-circular>
+                </v-overlay>
+            </v-col>
         </v-row>
 
     </v-container>
@@ -38,12 +51,15 @@
 
 <script>
     export default {
-       computed:{
-           productsOwn(){
-               console.log(this.$store.getters.productsOwn);
-               return this.$store.getters.productsOwn
-           }
-       }
+        computed: {
+            productsOwn() {
+                console.log(this.$store.getters.productsOwn);
+                return this.$store.getters.productsOwn
+            },
+            loading() {
+                return this.$store.getters.loading
+            }
+        }
     }
 </script>
 

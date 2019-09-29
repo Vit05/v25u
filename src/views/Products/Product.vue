@@ -3,13 +3,14 @@
         <v-row no-gutters>
             <v-col cols="8" offset="2">
                 <v-card
+                        v-if="!loading"
                         class="mx-auto"
                         outlined
                 >
                     <v-row no-gutters>
                         <v-col cols="4" class="py-4">
                             <v-img
-                                    src="https://image.ibb.co/fZzq1o/Lenovo_Legion_Y520.jpg"
+                                    :src="product.imageSrc"
                                     lazy-src="https://picsum.photos/id/11/10/6"
                                     aspect-ratio="2" contain
                                     max-height="300"
@@ -56,10 +57,7 @@
 
 
                             <v-card-actions>
-                                <v-btn color="accent-4"
-                                       class="primary">
-                                    Edit
-                                </v-btn>
+                                <app-edit-product v-if="isOwner" :product="product"></app-edit-product>
                                 <v-btn color="accent-4"
                                        class="primary">
                                     buy
@@ -69,6 +67,14 @@
                     </v-row>
 
                 </v-card>
+                <v-overlay v-else>
+                    <v-progress-circular
+                            :width="5"
+                            :size="50"
+                            color="red"
+                            indeterminate
+                    ></v-progress-circular>
+                </v-overlay>
             </v-col>
         </v-row>
 
@@ -76,13 +82,24 @@
 </template>
 
 <script>
+    import EditProduct from "./editProduct";
+
     export default {
         props: ['id'],
         computed: {
             product() {
                 const id = this.id;
                 return this.$store.getters.productById(id)
+            },
+            loading() {
+                return this.$store.getters.loading
+            },
+            isOwner(){
+                return this.product.ownerId === this.$store.getters.user.id
             }
+        },
+        components: {
+            appEditProduct: EditProduct
         }
     }
 </script>
