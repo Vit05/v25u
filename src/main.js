@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import App from './App.vue'
+import BuyDialogComponent from './components/ByDialogs.vue'
 import router from './router/router'
 import store from './store/store'
 import vuetify from './plugins/vuetify';
@@ -8,6 +9,8 @@ import * as fb from 'firebase/app'
 import "firebase/auth";
 import "firebase/firestore";
 
+
+Vue.component('app-buy-dialog', BuyDialogComponent)
 Vue.config.productionTip = false
 
 new Vue({

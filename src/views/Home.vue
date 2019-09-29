@@ -48,7 +48,7 @@
                         </v-card-text>
                         <v-card-actions>
                             <v-btn outlined color="indigo" :to="`/product/${item.id}`">Deskription</v-btn>
-                            <v-btn dark color="primary">Click</v-btn>
+                            <app-buy-dialog :product="product"></app-buy-dialog>
                         </v-card-actions>
                     </v-card>
                 </v-col>
@@ -82,6 +82,10 @@
             },
             products() {
                 return this.$store.getters.products
+            },
+            product() {
+                const id = this.id;
+                return this.$store.getters.productById(id)
             },
             loading() {
                 return this.$store.getters.loading

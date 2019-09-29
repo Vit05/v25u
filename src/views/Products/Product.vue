@@ -58,10 +58,8 @@
 
                             <v-card-actions>
                                 <app-edit-product v-if="isOwner" :product="product"></app-edit-product>
-                                <v-btn color="accent-4"
-                                       class="primary">
-                                    buy
-                                </v-btn>
+                                <app-buy-dialog :product="product"></app-buy-dialog>
+
                             </v-card-actions>
                         </v-col>
                     </v-row>
