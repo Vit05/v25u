@@ -34,6 +34,7 @@
             <v-toolbar>
                 <v-toolbar-title>
                     <router-link to="/">v25u</router-link>
+                    <span v-if="user" style="margin-left: 30px;">{{user.email}}</span>
                 </v-toolbar-title>
 
                 <div class="flex-grow-1"></div>
@@ -102,6 +103,9 @@
 
             isUserLoggedIn() {
                 return this.$store.getters.isUserLoggedIn
+            },
+            user() {
+                return this.$store.getters.user
             },
             links() {
                 if (this.isUserLoggedIn) {

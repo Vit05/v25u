@@ -1,12 +1,12 @@
 <template>
     <v-container class="lighten-10">
         <v-row no-gutters>
-            <v-col cols="8" offset="2" v-if="!loading && productsOwn.length !== 0">
+            <v-col cols="8" offset="2" v-if="!loading && myProducts.length !== 0">
                 <v-card
                         max-width="768"
                         class="mx-auto mb-4"
 
-                        v-for="(product, i) in productsOwn"
+                        v-for="(product, i) in myProducts"
                         :key="i"
                         :to="`/product/${product.id}`"
                 >
@@ -31,7 +31,7 @@
                     </v-row>
                 </v-card>
             </v-col>
-            <v-col cols="8" offset="2" v-else-if="!loading && productsOwn.length === 0">
+            <v-col cols="8" offset="2" v-else-if="!loading && myProducts.length === 0">
                 <h1>You haven't products yet!</h1>
             </v-col>
             <v-col cols="8" offset="2" v-else>
@@ -52,9 +52,9 @@
 <script>
     export default {
         computed: {
-            productsOwn() {
-                console.log(this.$store.getters.productsOwn);
-                return this.$store.getters.productsOwn
+            myProducts() {
+                console.log(this.$store.getters.myProducts);
+                return this.$store.getters.myProducts
             },
             loading() {
                 return this.$store.getters.loading

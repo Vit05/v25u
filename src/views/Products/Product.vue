@@ -80,6 +80,7 @@
 </template>
 
 <script>
+    import fb from 'firebase'
     import EditProduct from "./editProduct";
 
     export default {
@@ -93,7 +94,11 @@
                 return this.$store.getters.loading
             },
             isOwner(){
-                return this.product.ownerId === this.$store.getters.user.id
+                if (this.$store.getters.isUserLoggedIn) {
+                    return this.product.ownerId === fb.auth().currentUser.uid
+                } else {
+                    console.log('YOU DO NOT LOGIN')
+                }
             }
         },
         components: {

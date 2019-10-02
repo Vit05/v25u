@@ -77,7 +77,7 @@ export default {
                 throw error
             }
         },
-        async createProduct({commit, getters}, payload) {
+        async createProduct({commit}, payload) {
 
             commit('clearError')
             commit('setLoading', true)
@@ -92,7 +92,7 @@ export default {
                     payload.material,
                     payload.price,
                     payload.description,
-                    getters.user.id,
+                    fb.auth().currentUser.uid,
                     '',
                     payload.promo,
                 )
@@ -153,9 +153,9 @@ export default {
         productsPromo(state) {
             return state.products.filter(product => product.promo)
         },
-        productsOwn(state, getters) {
-            return state.products.filter(product=>{
-                return product.ownerId === getters.user.id
+        myProducts (state) {
+            return state.products.filter(product => {
+                return product.ownerId === fb.auth().currentUser.uid
             })
         },
         productById(state) {

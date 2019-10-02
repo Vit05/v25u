@@ -1,8 +1,9 @@
 import * as fb from 'firebase/app'
 
 class User {
-    constructor(id) {
+    constructor(id, email) {
         this.id = id
+        this.email = email
     }
 }
 
@@ -22,7 +23,7 @@ export default {
             try {
 
                 const user = await fb.auth().createUserWithEmailAndPassword(email, password)
-                commit('setUser', new User(user.uid))
+                commit('setUser', new User(user.uid, email))
                 commit('setLoading', false)
             } catch (error) {
                 commit('setLoading', false)
@@ -36,7 +37,7 @@ export default {
             try {
 
                 const user = await fb.auth().signInWithEmailAndPassword(email, password)
-                commit('setUser', new User(user.uid))
+                commit('setUser', new User(user.uid, email))
                 commit('setLoading', false)
             } catch (error) {
                 commit('setLoading', false)
@@ -46,7 +47,7 @@ export default {
         },
 
         autoLoginUser({commit}, payload){
-            commit('setUser', new User(payload.uid))
+            commit('setUser', new User(payload.uid, payload.email))
         },
         logoutUser({commit}){
             fb.auth().signOut()

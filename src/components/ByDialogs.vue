@@ -81,7 +81,7 @@
                         name: this.name,
                         phone: this.phone,
                         email: this.email,
-                        productId: this.productId,
+                        productId: this.product.id,
                         ownerId: this.product.ownerId
                     }).finally(() => {
                         this.name = ''

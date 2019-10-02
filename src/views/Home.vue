@@ -48,7 +48,7 @@
                         </v-card-text>
                         <v-card-actions>
                             <v-btn outlined color="indigo" :to="`/product/${item.id}`">Deskription</v-btn>
-                            <app-buy-dialog :product="product"></app-buy-dialog>
+                            <app-buy-dialog :product="item"></app-buy-dialog>
                         </v-card-actions>
                     </v-card>
                 </v-col>
@@ -77,11 +77,11 @@
             }
         },
         computed: {
-            productsPromo() {
-                return this.$store.getters.productsPromo
-            },
             products() {
                 return this.$store.getters.products
+            },
+            productsPromo() {
+                return this.$store.getters.productsPromo
             },
             product() {
                 const id = this.id;
